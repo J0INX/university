@@ -1,0 +1,126 @@
+<div class="loginform">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h1>{{ isRegisterMode ? "REGÍSTRATE" : "INICIA SESIÓN" }}</h1>
+    <mat-form-field appearance="outline">
+      <mat-label>Correo Electrónico</mat-label>
+      <input
+        matInput
+        id="email"
+        autocomplete="email"
+        formControlName="email"
+        type="email"
+        placeholder="correo@ejemplo.com"
+      />
+      <mat-hint>Introduce tu correo electrónico</mat-hint>
+      @if ( loginForm.get("email")?.hasError("email") &&
+      !loginForm.get("email")?.hasError("required") ) {
+      <mat-error>El correo no es válido</mat-error>
+      } @if (loginForm.get("email")?.hasError("required")) {
+      <mat-error>El correo es<strong> obligatorio</strong></mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input
+        matInput
+        id="password"
+        autocomplete="current-password"
+        formControlName="password"
+        [type]="hideState['button1']() ? 'password' : 'text'"
+        placeholder="Contraseña"
+      />
+      <button
+        class="pswicon"
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="clickEvent($event, 'button1')"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hideState['button1']()"
+      >
+        <mat-icon>{{
+          hideState["button1"]() ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+
+      <mat-hint>Introduce tu contraseña</mat-hint>
+
+      @if ( loginForm.get("password")?.hasError("minlength") &&
+      loginForm.get("password")?.touched &&
+      !loginForm.get("password")?.hasError("required") ) {
+      <mat-error>La contraseña debe tener al menos 6 caracteres</mat-error>
+      } @if (loginForm.get("password")?.hasError("required")) {
+      <mat-error>La contraseña es<strong> obligatoria</strong></mat-error>
+      }
+    </mat-form-field>
+
+    @if (isRegisterMode) {
+    <mat-form-field appearance="outline">
+      <mat-label>Confirmar Contraseña</mat-label>
+      <input
+        matInput
+        [type]="hideState['button2']() ? 'password' : 'text'"
+        formControlName="confirmPassword"
+        placeholder="Repite tu contraseña"
+      />
+      <button
+        class="pswicon"
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="clickEvent($event, 'button2')"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hideState['button2']()"
+      >
+        <mat-icon>{{
+          hideState["button2"]() ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <mat-hint>Confirma tu contraseña</mat-hint>
+
+      @if ( loginForm.get("confirmPassword")?.hasError("minlength") &&
+      loginForm.get("confirmPassword")?.touched &&
+      !loginForm.get("confirmPassword")?.hasError("required") ) {
+      <mat-error>La contraseña debe tener al menos 6 caracteres</mat-error>
+      } @if (loginForm.get("confirmPassword")?.hasError("required")) {
+      <mat-error
+        >Confirmar la contraseña es<strong> obligatorio</strong></mat-error
+      >
+      } @if (loginForm.get("confirmPassword")?.hasError("mismatch")) {
+      <mat-error> Las contraseñas no coinciden </mat-error>
+      }
+    </mat-form-field>
+    } @if (loginForm.hasError("invalidCredentials")) {
+    <mat-error> Usuario o contraseña incorrectos </mat-error>
+    }
+
+    <div class="btns">
+      <button
+        mat-raised-button
+        color="warn"
+        [routerLink]="['/home']"
+        class="cancel"
+        type="button"
+      >
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color=" primary"
+        class="login"
+        type="submit"
+        [disabled]="loginForm.invalid"
+      >
+        {{ isRegisterMode ? "Regístrate" : "Inicia Sesión" }}
+      </button>
+    </div>
+
+    <p class="toggle">
+      {{ isRegisterMode ? "¿Ya tienes una cuenta?" : "¿No tienes una cuenta?" }}
+      <a [routerLink]="['/login']" (click)="toggleMode()">{{
+        isRegisterMode ? "Inicia sesión" : "Regístrate"
+      }}</a>
+    </p>
+  </form>
+</div>
